@@ -9,8 +9,14 @@ import 'theme/app_theme.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  const supabaseUrl = String.fromEnvironment('SUPABASE_URL', defaultValue: '');
-  const supabaseAnonKey = String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: '');
+  const supabaseUrl = String.fromEnvironment(
+    'SUPABASE_URL', 
+    defaultValue: 'https://rinpmuesnusrztspxcln.supabase.co',
+  );
+  const supabaseAnonKey = String.fromEnvironment(
+    'SUPABASE_ANON_KEY', 
+    defaultValue: 'sb_publishable_TQEZ6fEdWvdiDuVh6ouWXg_fJ5RLGEA',
+  );
 
   if (supabaseUrl.isNotEmpty && supabaseAnonKey.isNotEmpty) {
     try {

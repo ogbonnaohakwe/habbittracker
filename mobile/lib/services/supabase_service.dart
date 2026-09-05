@@ -118,9 +118,16 @@ class HabitService extends ChangeNotifier {
     }
   }
 
+  String? _lastAuthError;
+  String? get lastAuthError => _lastAuthError;
+
   Future<bool> signUp(String email, String password) async {
+    _lastAuthError = null;
     final client = _supabaseClient;
-    if (client == null) return false;
+    if (client == null) {
+      _lastAuthError = 'Supabase client is not initialized.';
+      return false;
+    }
 
     try {
       final res = await client.auth.signUp(email: email, password: password);
@@ -130,16 +137,26 @@ class HabitService extends ChangeNotifier {
         await fetchHabitsFromSupabase();
         notifyListeners();
         return true;
+      } else {
+        _lastAuthError = 'Unable to create user account.';
       }
+    } on AuthException catch (e) {
+      _lastAuthError = e.message;
+      debugPrint('Sign up AuthException: ${e.message}');
     } catch (e) {
+      _lastAuthError = e.toString();
       debugPrint('Sign up error: $e');
     }
     return false;
   }
 
   Future<bool> signIn(String email, String password) async {
+    _lastAuthError = null;
     final client = _supabaseClient;
-    if (client == null) return false;
+    if (client == null) {
+      _lastAuthError = 'Supabase client is not initialized.';
+      return false;
+    }
 
     try {
       final res = await client.auth.signInWithPassword(email: email, password: password);
@@ -149,8 +166,14 @@ class HabitService extends ChangeNotifier {
         await fetchHabitsFromSupabase();
         notifyListeners();
         return true;
+      } else {
+        _lastAuthError = 'Invalid email or password.';
       }
+    } on AuthException catch (e) {
+      _lastAuthError = e.message;
+      debugPrint('Sign in AuthException: ${e.message}');
     } catch (e) {
+      _lastAuthError = e.toString();
       debugPrint('Sign in error: $e');
     }
     return false;

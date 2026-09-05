@@ -41,13 +41,23 @@ class _AuthScreenState extends State<AuthScreen> {
 
     if (mounted) {
       setState(() => _isSubmitting = false);
-      if (success || !service.isAuthenticated) {
+      if (success) {
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
+            backgroundColor: const Color(0xFF16A34A),
             content: Text(
               _isSignUp ? 'Account created & synced!' : 'Logged in successfully!',
             ),
+          ),
+        );
+      } else {
+        final errorMsg = service.lastAuthError ?? 
+          (_isSignUp ? 'Registration failed. Please check your details.' : 'Invalid email or password.');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            backgroundColor: const Color(0xFFDC2626),
+            content: Text(errorMsg),
           ),
         );
       }
